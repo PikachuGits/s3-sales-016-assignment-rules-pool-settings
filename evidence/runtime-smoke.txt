@@ -1,0 +1,15 @@
+== runtime smoke 2026-11-20T04:02:33Z ==
+-- GET /openapi.json --
+HTTP 200, 21919 bytes
+-- POST /api/sales/assignment-rules --
+{"id":"55750c3f-e796-450a-8aaa-93487896161a","org_id":"11111111-1111-4111-8111-111111111111","site_id":"22222222-2222-4222-8222-222222222222","name":"冒烟-审计","strategy":"fixed_user","conditions":{"intent":["high"]},"member_user_ids":["aaaaaaaa-0000-4000-8000-000000000003"],"work_hours":[{"weekday":1,"start":"09:00","end":"18:00"}],"priority":5,"enabled":true,"created_at":"2026-11-20T12:02:33.894374+08:00","created_by":"aaaaaaaa-0000-4000-8000-000000000001","updated_at":"2026-11-20T12:02:33.894374+08:00"}
+HTTP 201
+-- GET /api/sales/config-logs?action=create --
+{"items":[{"id":"f9c2d3e9-0b7e-41d5-83f3-a95486a86e4b","org_id":"11111111-1111-4111-8111-111111111111","site_id":"22222222-2222-4222-8222-222222222222","entity_type":"assignment_rule","entity_id":"55750c3f-e796-450a-8aaa-93487896161a","action":"create","old_value":null,"new_value":{"name":"冒烟-审计","enabled":true,"priority":5,"strategy":"fixed_user","conditions":{"intent":["high"]},"work_hours":[{"end":"18:00","start":"09:00","weekday":1}],"member_user_ids":["aaaaaaaa-0000-4000-8000-000000000003"]},"operator_id":"aaaaaaaa-0000-4000-8000-000000000001","created_at":"2026-11-20T12:02:33.895898+08:00"},{"id":"5507fb88-b3f2-4c6a-980c-905a290ca303","org_id":"11111111-1111-4111-8111-111111111111","site_id":"22222222-2222-4222-8222-222222222222","entity_type":"assignment_rule","entity_id":"1442c40e-906d-4637-a014-e74b5109155e","action":"create","old_value":null,"new_value":{"name":"冒烟-轮询","enabled":true,"priority":9,"strategy":"round_robin","conditions":{"region":["east"]},"work_hours":[{"end":"18:00","start":"09:00","weekday":0}],"member_user_ids":["aaaaaaaa-0000-4000-8000-000000000003","aaaaaaaa-0000-4000-8000-000000000004"]},"operator_id":"aaaaaaaa-0000-4000-8000-000000000001","created_at":"2026-11-20T12:02:24.627972+08:00"}],"total":2,"page":1,"page_size":5}
+HTTP 200
+-- PUT /api/sales/pool-settings (warn == recycle) --
+{"detail":[{"type":"value_error","loc":[],"msg":"Value error, recycle_warn_days must be strictly smaller than recycle_days","input":{"recycle_days":7,"recycle_warn_days":7,"daily_claim_limit":10,"holding_limit":150,"reclaim_cooldown_days":15},"ctx":{"error":{}},"url":"https://errors.pydantic.dev/2.10/v/value_error"}]}
+HTTP 422
+-- GET /api/sales/assignment-rules as consultant (expect 403) --
+{"detail":"role_not_allowed_for_rule_read"}
+HTTP 403

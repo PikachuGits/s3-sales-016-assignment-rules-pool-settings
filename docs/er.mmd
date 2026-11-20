@@ -1,0 +1,51 @@
+erDiagram
+    sales_assignment_rule {
+        uuid id PK
+        uuid org_id
+        uuid site_id
+        varchar name
+        varchar strategy
+        jsonb conditions
+        uuid_array member_user_ids
+        jsonb work_hours
+        integer priority
+        boolean enabled
+        timestamptz created_at
+        uuid created_by
+        timestamptz updated_at
+        timestamptz deleted_at
+    }
+
+    sales_pool_settings {
+        uuid id PK
+        uuid org_id
+        uuid site_id
+        integer recycle_days
+        integer recycle_warn_days
+        integer daily_claim_limit
+        integer holding_limit
+        integer reclaim_cooldown_days
+        timestamptz created_at
+        uuid created_by
+        timestamptz updated_at
+        timestamptz deleted_at
+    }
+
+    sales_config_change_log {
+        uuid id PK
+        uuid org_id
+        uuid site_id
+        varchar entity_type
+        uuid entity_id
+        varchar action
+        jsonb old_value
+        jsonb new_value
+        uuid operator_id
+        timestamptz created_at
+        uuid created_by
+        timestamptz updated_at
+        timestamptz deleted_at
+    }
+
+    sales_assignment_rule ||--o{ sales_config_change_log : "entity_id (logical)"
+    sales_pool_settings ||--o{ sales_config_change_log : "entity_id (logical)"
